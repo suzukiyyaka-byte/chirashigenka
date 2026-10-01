@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>社内連絡先ダッシュボード</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23176769'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-size='22' fill='white'%3E☎%3C/text%3E%3C/svg%3E"><style>
+:root{font-family:system-ui,-apple-system,'Yu Gothic',sans-serif;color:#20383d;background:#f3f6f6}*{box-sizing:border-box}body{margin:0}header{background:#123f46;color:white;padding:25px max(24px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{font-size:17px;font-weight:700}.badge{border:1px solid #7e9a9e;border-radius:30px;padding:6px 12px;font-size:12px;white-space:nowrap}main{max-width:1100px;margin:auto;padding:48px 24px}h1{font-size:clamp(26px,5vw,38px);letter-spacing:.02em;margin:0 0 13px}p{line-height:1.8;color:#52666b;margin:0}.searchbox{background:white;padding:25px;border:1px solid #d9e4e5;border-radius:18px;margin:27px 0 25px;box-shadow:0 6px 20px #183c4510}label{display:block;font-size:13px;font-weight:700;margin-bottom:9px}.inputrow{display:flex;gap:10px}input{flex:1;min-width:0;padding:16px;border:2px solid #aabfc2;border-radius:10px;font:inherit;font-size:20px;color:#173b42}input:focus{outline:3px solid #17676930;border-color:#176769}button,select{font:inherit}button{cursor:pointer;border:1px solid #cfdddd;border-radius:9px;padding:11px 15px;background:white;color:#24474e}button:hover{background:#eaf4f3}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #176769}.tools{display:flex;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap}select{padding:10px;border:1px solid #cfdddd;border-radius:8px;background:white;color:#24474e}.namepicker{margin:0}.namepicker select{width:100%;font-size:17px;padding:13px;min-height:48px}.hint{font-size:12px;margin-top:13px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:15px}h2{font-size:16px;margin:0}#count{font-size:13px;color:#52666b}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{border:1px solid #d8e2e3;border-radius:15px;background:white;padding:23px}.dept{font-size:12px;color:#176769;font-weight:700;letter-spacing:.08em}.name{font-size:22px;margin:9px 0 20px;font-weight:700}.numbers{display:flex;gap:12px;flex-wrap:wrap}.number{flex:1;min-width:135px;background:#f3f7f7;border-radius:10px;padding:14px}.number.primary{background:#e7f3f1}.number span{display:block;font-size:12px;color:#52666b;margin-bottom:6px}.number strong{display:block;font-size:28px;font-variant-numeric:tabular-nums;color:#164d53}.number.mobile{flex-basis:100%}.number.mobile strong{font-size:25px;letter-spacing:.02em}.dial{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:11px 16px;min-height:44px;border-radius:9px;background:#176769;color:white;text-decoration:none;font-size:14px;font-weight:700}.dial:hover{background:#124f51}.phone-number{color:inherit;text-decoration:none}.phone-number:hover{text-decoration:underline}.copy{font-size:11px;padding:5px 10px;margin-top:10px;background:transparent}.missing{font-size:12px;margin-top:13px}.note{font-size:12px;color:#775b30;margin-top:14px}.empty{text-align:center;padding:50px 20px;border:1px dashed #bacdd0;border-radius:15px;grid-column:1/-1}.empty .symbol{font-size:32px;color:#176769;margin-bottom:14px}.empty strong{display:block;margin-bottom:10px}footer{margin-top:35px;padding-top:20px;border-top:1px solid #d4dfe0;font-size:12px;color:#64777b;line-height:1.8}.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);border-radius:10px;padding:12px 22px;background:#123f46;color:white;box-shadow:0 4px 20px #0002;max-width:90vw}.toast:empty{display:none}@media(max-width:650px){header{padding:18px 20px}.brand{font-size:14px}main{padding:30px 18px}.searchbox{padding:19px}.grid{grid-template-columns:1fr}.card{padding:20px}.inputrow button{padding:8px 11px}input{font-size:18px}.number.mobile strong{font-size:23px}}
+</style></head><body><header><div class="brand">☎ 社内連絡先ダッシュボード</div><div class="badge">社内用</div></header><main><h1>氏名を選んで、すぐにつながる。</h1><p>氏名を選ぶと、連絡先が表示されます。<br>携帯番号のない方は、内線番号のみ表示します。</p><section class="searchbox" aria-label="連絡先を選択"><div class="namepicker"><label for="person">氏名から選ぶ</label><select id="person"><option value="">氏名を選択してください</option></select></div><p class="hint">氏名と部署を確認して選択してください。部屋名や共用電話も選べます。</p></section><section aria-label="検索結果"><div class="sectionhead"><h2 id="heading">検索結果</h2><span id="count" role="status" aria-live="polite"></span></div><div id="results" class="grid"></div></section><footer>連絡先の出典：添付連絡先表（2026/9/4）<br>内線が空欄の方は「内線番号の記載なし」と表示します。氏名空欄の行は、プルダウンから確認できます。<br>携帯番号または「電話する」をタップすると、電話アプリが開きます。内線・短縮番号は社内電話でご利用ください。<br>このHTMLはインターネット接続なしで使用できます。</footer></main><div id="toast" class="toast" role="status" aria-live="polite"></div><script>
+// 連絡先を更新する場合は、以下の CONTACTS 内の文字列を編集してください。
+const CONTACTS=[
+  {
+    "name": "妻鹿吉晃",
+    "surname": "妻鹿",
+    "department": "共通",
+    "extension": "13",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "井戸 敦",
+    "surname": "井戸",
+    "department": "管理部",
+    "extension": "45",
+    "short": "012",
+    "mobile": "090-5190-5056",
+    "note": ""
+  },
+  {
+    "name": "青山 崇",
+    "surname": "青山",
+    "department": "営業部",
+    "extension": "22",
+    "short": "023",
+    "mobile": "090-5208-8970",
+    "note": ""
+  },
+  {
+    "name": "石鍋嘉博",
+    "surname": "石鍋",
+    "department": "営業部",
+    "extension": "31",
+    "short": "029",
+    "mobile": "090-5209-6073",
+    "note": ""
+  },
+  {
+    "name": "伊東一樹",
+    "surname": "伊東",
+    "department": "営業部",
+    "extension": "27",
+    "short": "018",
+    "mobile": "090-7635-9570",
+    "note": ""
+  },
+  {
+    "name": "岩田利之",
+    "surname": "岩田",
+    "department": "営業部",
+    "extension": "20",
+    "short": "014",
+    "mobile": "090-1606-8654",
+    "note": ""
+  },
+  {
+    "name": "清水龍二",
+    "surname": "清水",
+    "department": "営業部",
+    "extension": "26",
+    "short": "024",
+    "mobile": "090-5807-6419",
+    "note": ""
+  },
+  {
+    "name": "鈴木雄二",
+    "surname": "鈴木",
+    "department": "営業部",
+    "extension": "39",
+    "short": "040",
+    "mobile": "090-2660-6022",
+    "note": ""
+  },
+  {
+    "name": "松浦和彦",
+    "surname": "松浦",
+    "department": "営業部",
+    "extension": "28",
+    "short": "036",
+    "mobile": "090-5569-2632",
+    "note": ""
+  },
+  {
+    "name": "松尾陽介",
+    "surname": "松尾",
+    "department": "営業部",
+    "extension": "29",
+    "short": "105",
+    "mobile": "070-1002-6492",
+    "note": ""
+  },
+  {
+    "name": "丸屋博明",
+    "surname": "丸屋",
+    "department": "営業部",
+    "extension": "24",
+    "short": "026",
+    "mobile": "090-8005-5236",
+    "note": ""
+  },
+  {
+    "name": "宮崎浩平",
+    "surname": "宮崎",
+    "department": "営業部",
+    "extension": "23",
+    "short": "015",
+    "mobile": "090-8644-4715",
+    "note": ""
+  },
+  {
+    "name": "遊佐充生",
+    "surname": "遊佐",
+    "department": "営業部",
+    "extension": "25",
+    "short": "042",
+    "mobile": "090-5818-3859",
+    "note": ""
+  },
+  {
+    "name": "寺野遥斗",
+    "surname": "寺野",
+    "department": "営業部",
+    "extension": "21",
+    "short": "049",
+    "mobile": "090-7830-0165",
+    "note": ""
+  },
+  {
+    "name": "宍戸和行",
+    "surname": "宍戸",
+    "department": "営業部",
+    "extension": "",
+    "short": "109",
+    "mobile": "090-7062-5234",
+    "note": ""
+  },
+  {
+    "name": "濱田和香奈",
+    "surname": "濱田",
+    "department": "営業部",
+    "extension": "30",
+    "short": "010",
+    "mobile": "080-8847-6596",
+    "note": ""
+  },
+  {
+    "name": "瓜生恒起",
+    "surname": "瓜生",
+    "department": "営業部",
+    "extension": "34",
+    "short": "011",
+    "mobile": "080-1415-4530",
+    "note": ""
+  },
+  {
+    "name": "及川正義",
+    "surname": "及川",
+    "department": "制作課",
+    "extension": "54",
+    "short": "019",
+    "mobile": "090-1665-2000",
+    "note": ""
+  },
+  {
+    "name": "笹村伊都",
+    "surname": "笹村",
+    "department": "制作課",
+    "extension": "55",
+    "short": "802",
+    "mobile": "080-1256-4595",
+    "note": ""
+  },
+  {
+    "name": "鈴木北斗",
+    "surname": "鈴木",
+    "department": "制作課",
+    "extension": "52",
+    "short": "039",
+    "mobile": "080-1154-5218",
+    "note": ""
+  },
+  {
+    "name": "関戸一慶",
+    "surname": "関戸",
+    "department": "制作課",
+    "extension": "53",
+    "short": "027",
+    "mobile": "090-5435-6357",
+    "note": ""
+  },
+  {
+    "name": "瀧澤健之",
+    "surname": "瀧澤",
+    "department": "制作課",
+    "extension": "56",
+    "short": "030",
+    "mobile": "090-2240-8886",
+    "note": ""
+  },
+  {
+    "name": "山川信二",
+    "surname": "山川",
+    "department": "制作課",
+    "extension": "51 / 74",
+    "short": "034",
+    "mobile": "070-1002-7097",
+    "note": ""
+  },
+  {
+    "name": "山本英明",
+    "surname": "山本",
+    "department": "制作課",
+    "extension": "50",
+    "short": "020",
+    "mobile": "080-1060-8957",
+    "note": ""
+  },
+  {
+    "name": "西岡賢志",
+    "surname": "西岡",
+    "department": "製造部",
+    "extension": "79",
+    "short": "031",
+    "mobile": "080-1194-5770",
+    "note": ""
+  },
+  {
+    "name": "鈴木武史",
+    "surname": "鈴木",
+    "department": "製造部",
+    "extension": "78",
+    "short": "032",
+    "mobile": "090-7721-6013",
+    "note": ""
+  },
+  {
+    "name": "外山貴之",
+    "surname": "外山",
+    "department": "製造部",
+    "extension": "77",
+    "short": "035",
+    "mobile": "090-5517-3222",
+    "note": ""
+  },
+  {
+    "name": "渡辺智弘",
+    "surname": "渡辺",
+    "department": "製造部",
+    "extension": "",
+    "short": "037",
+    "mobile": "070-1002-7204",
+    "note": ""
+  },
+  {
+    "name": "高瀬",
+    "surname": "高瀬",
+    "department": "刷版",
+    "extension": "60",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "塚田",
+    "surname": "塚田",
+    "department": "オンデマンド",
+    "extension": "63",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "河野",
+    "surname": "河野",
+    "department": "製造部",
+    "extension": "71",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "小林",
+    "surname": "小林",
+    "department": "製造部",
+    "extension": "72",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "佐藤",
+    "surname": "佐藤",
+    "department": "製造部",
+    "extension": "76",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "坂倉",
+    "surname": "坂倉",
+    "department": "製造部",
+    "extension": "73",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "島田",
+    "surname": "島田",
+    "department": "管理部",
+    "extension": "48",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "赤荻",
+    "surname": "赤荻",
+    "department": "管理部",
+    "extension": "46",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "広瀬",
+    "surname": "広瀬",
+    "department": "管理部",
+    "extension": "47",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "ヤカ3階",
+    "surname": "ヤカ3階",
+    "department": "共用・設備",
+    "extension": "88",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "刷版室",
+    "surname": "刷版室",
+    "department": "共用・設備",
+    "extension": "60",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "加工場",
+    "surname": "加工場",
+    "department": "共用・設備",
+    "extension": "85",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "1階業務部屋",
+    "surname": "1階業務部屋",
+    "department": "共用・設備",
+    "extension": "86",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "会議室",
+    "surname": "会議室",
+    "department": "共用・設備",
+    "extension": "12",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "2Fミーティング室",
+    "surname": "2Fミーティング室",
+    "department": "共用・設備",
+    "extension": "11",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "1階玄関",
+    "surname": "1階玄関",
+    "department": "共用・設備",
+    "extension": "99",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "ナガイビジネスS",
+    "surname": "ナガイビジネスS",
+    "department": "共用・設備",
+    "extension": "10",
+    "short": "",
+    "mobile": "",
+    "note": ""
+  },
+  {
+    "name": "オンデ携帯",
+    "surname": "オンデ携帯",
+    "department": "共用・設備",
+    "extension": "",
+    "short": "013",
+    "mobile": "070-1002-7512",
+    "note": ""
+  },
+  {
+    "name": "配送用",
+    "surname": "配送用",
+    "department": "共用・設備",
+    "extension": "",
+    "short": "017",
+    "mobile": "090-1604-5264",
+    "note": ""
+  },
+  {
+    "name": "5号機",
+    "surname": "5号機",
+    "department": "共用・設備",
+    "extension": "",
+    "short": "008",
+    "mobile": "080-1294-0270",
+    "note": ""
+  },
+  {
+    "name": "6号機",
+    "surname": "6号機",
+    "department": "共用・設備",
+    "extension": "",
+    "short": "025",
+    "mobile": "090-6944-3244",
+    "note": ""
+  },
+  {
+    "name": "氏名空欄（営業部）",
+    "surname": "氏名空欄",
+    "department": "営業部",
+    "extension": "",
+    "short": "",
+    "mobile": "090-8779-8472",
+    "note": "PDFに氏名の記載がないため、担当者は未確認です。"
+  },
+  {
+    "name": "氏名空欄（オンデマンド）",
+    "surname": "氏名空欄",
+    "department": "オンデマンド",
+    "extension": "61",
+    "short": "",
+    "mobile": "",
+    "note": "PDFに氏名の記載がないため、担当者は未確認です。"
+  },
+  {
+    "name": "氏名空欄（製造部）",
+    "surname": "氏名空欄",
+    "department": "製造部",
+    "extension": "75",
+    "short": "",
+    "mobile": "",
+    "note": "PDFに氏名の記載がないため、担当者は未確認です。"
+  }
+];
+const $=s=>document.querySelector(s);let toastTimer;
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function populatePeople(){CONTACTS.map((r,index)=>({r,index})).sort((a,b)=>a.r.name.localeCompare(b.r.name,'ja')).forEach(({r,index})=>{const option=document.createElement('option');option.value=String(index);option.textContent=`${r.name} ｜ ${r.department}`;$('#person').append(option)});}populatePeople();
+function field(label,value,type=''){const tel='tel:'+value.replace(/[^0-9+]/g,'');const number=type==='mobile'?`<a class="phone-number" href="${tel}" aria-label="${escapeHTML(value)}に電話">${escapeHTML(value)}</a>`:escapeHTML(value);return `<div class="number ${type}"><span>${label}</span><strong>${number}</strong>${type==='mobile'?`<a class="dial" href="${tel}" aria-label="${escapeHTML(value)}に電話">☎ 電話する</a>`:''}<button type="button" class="copy" data-copy="${escapeHTML(value)}" aria-label="${label} ${escapeHTML(value)}をコピー">コピー</button></div>`}
+function render(){const person=$('#person').value;const r=person!==''?CONTACTS[Number(person)]:null;$('#count').textContent=r?'1件':'';
+$('#results').innerHTML=!r?'<div class="empty"><div class="symbol">☎</div><strong>氏名を選択してください</strong><p>上のプルダウンから選ぶと、連絡先が表示されます。</p></div>':`<article class="card"><div class="dept">${escapeHTML(r.department)}</div><h3 class="name">${escapeHTML(r.name)}</h3><div class="numbers">${r.mobile?field('携帯番号',r.mobile,'mobile'):''}${r.extension?field('内線番号',r.extension,'primary'):''}${r.mobile&&r.short?field('短縮ダイヤル',r.short):''}</div>${!r.extension?'<p class="missing">内線番号の記載なし</p>':''}${r.note?`<p class="note">${escapeHTML(r.note)}</p>`:''}</article>`;}
+$('#person').addEventListener('change',render);
+$('#results').addEventListener('click',async e=>{const b=e.target.closest('[data-copy]');if(!b)return;let copied=false;try{if(navigator.clipboard){await navigator.clipboard.writeText(b.dataset.copy);copied=true}}catch(_){}if(!copied){const ta=document.createElement('textarea');ta.value=b.dataset.copy;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();try{copied=document.execCommand('copy')}catch(_){}ta.remove();b.focus()}$('#toast').textContent=copied?'番号をコピーしました':'コピーできませんでした。番号を選択してコピーしてください。';clearTimeout(toastTimer);toastTimer=setTimeout(()=>{$('#toast').textContent=''},2500)});render();
+</script></body></html>
